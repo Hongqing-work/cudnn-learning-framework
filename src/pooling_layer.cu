@@ -67,7 +67,6 @@ void PoolingLayer::InitParameter() {
     * Initialization for data
     */
     int in_size = batch_size * in_channels * in_height * in_width;
-    printf("pooling layer size: %d, %d", in_size, out_size);
     // Allocate memory for data_out and backward diff
     checkCudaErrors(cudaMalloc((void**)&bottom_diff, sizeof(float) * in_size));
     checkCudaErrors(cudaMalloc((void**)&data_out, sizeof(float) * out_size));

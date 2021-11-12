@@ -67,7 +67,9 @@ void Training(cudnnHandle_t *cudnnHandle, cublasHandle_t *cublasHandle,
     checkCudaErrors(cudaDeviceSynchronize());
     auto t1 = std::chrono::high_resolution_clock::now();
     for (int iter = 0; iter < max_iteration; ++iter) {
-        printf("Iteration number : %d, ", iter);
+        if (iter % 50 == 0) {
+            printf("Iteration number : %d, ", iter);
+        }
         int imageid = iter % ((train_size  - batch_size + 1)/ batch_size);
         // Prepare current batch on device
         checkCudaErrors(cudaMemcpy(device_data_ptr, train_data + imageid * 
@@ -85,7 +87,9 @@ void Training(cudnnHandle_t *cudnnHandle, cublasHandle_t *cublasHandle,
         float *fc1_out = fc1->forward(pool2_out, cublasHandle);
         float *fc2_out = fc2->forward(fc1_out, cublasHandle);
         float *result = softmax->forward(fc2_out, cudnnHandle);
-        printf("loss : %f \n", softmax->getloss(device_label_ptr));
+        if (iter % 50 == 0) {
+            printf("loss : %f \n", softmax->getloss(device_label_ptr));
+        }
         
         // Backward propagation
         float *softmax_back = softmax->backward(device_label_ptr);
